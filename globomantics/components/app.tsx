@@ -1,28 +1,42 @@
-import { useState } from "react";
-import Banner from "./banner";
-import HouseList from "@/components/house/houseList";
-import HouseDetail from "@/components/house/houseDetail";
+import React, { useCallback, useState } from "react";
 
-import type { House } from "@/shared/types/house"; 
+import Banner from "./banner";
+import ComponentPicker from "./componentPicker";
+
+import { navValues } from "@/helpers/navValues";
+
+import type { House } from "@/shared/types/house";
+
+const navigationContext = React.createContext<TNavigate>({ current: navValues.HOME });
+
+type TNavigate = {
+    current: navValues,
+    navigate?: TCallback | undefined,
+    param?: House | undefined
+}
+
+type TCallback = (navTo : navValues, param: any) => void; 
 
 const App = () => {
 
-    const [selectedHouse, setSelectedHouse] = useState<House>();
+    const navigate : TCallback = useCallback<TCallback>(
+        (navTo : navValues, param: any) => setNav({ 
+            current: navTo,
+            param,
+            navigate 
+        }),
+        []
+    );
 
-    const setSelectedHouseWrapper = (house: House) => {
-        setSelectedHouse(house);
-    }
+    const [nav, setNav] = useState<TNavigate>({ current: navValues.HOME, navigate});
 
     return (
-        <>
+        <navigationContext.Provider value={nav}>
             <Banner>Providing houses all over the world</Banner>
-            {selectedHouse ? 
-                <HouseDetail house={ selectedHouse } /> 
-                    : 
-                <HouseList selectHouse={ setSelectedHouse }/>
-            }
-        </>
+            <ComponentPicker currentNavLocation={nav.current} />
+        </navigationContext.Provider>
     );
 };
 
+export { navigationContext };
 export default App;

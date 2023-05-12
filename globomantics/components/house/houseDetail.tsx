@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import currencyFormatter from "@/helpers/currencyFormatter";
 import defaultPhoto from "@/helpers/defaultPhoto";
 
 import type { House } from "@/shared/types/house"; 
+import { navigationContext } from "../app";
 
 type Props = {
     house: House;
 }
 
-const HouseDetail = ({ house } : Props) => {
-  return (
+const HouseDetail = () => {
+
+    const { param: house } = useContext(navigationContext);
+
+    return (
+
     <div className="row">
       <div className="col-6">
         <div className="row">

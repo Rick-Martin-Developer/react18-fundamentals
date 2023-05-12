@@ -1,16 +1,21 @@
-import React from "react"; 
+import React, { useContext } from "react"; 
 import currencyFormatter from "@/helpers/currencyFormatter";
 
-import type { House } from "@/shared/types/house"; 
+import { navigationContext } from "../app";
+
+import type { House } from "@/shared/types/house";
+import { navValues } from "@/helpers/navValues";
 
 export type Props = {
-    house: House,
-    selectHouse: (house : House) => void 
+    house: House
 }
 
-const HouseRow = ({house, selectHouse} :Props) => {
+const HouseRow = ({house} :Props) => {
+
+    const { navigate } = useContext(navigationContext); 
+
     return (
-        <tr onClick={() => selectHouse(house)}>
+        <tr onClick={() => navigate(navValues.HOUSE, house)}>
             <td>{house.address}</td>
             <td>{house.country}</td>
             {house.price && (
